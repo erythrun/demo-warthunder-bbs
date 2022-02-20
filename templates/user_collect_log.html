@@ -1,0 +1,63 @@
+<!--
+ * @Author: X105E
+ * @Email: NOIR.APTX4869@gmail.com
+ * @Date: 2019-01-24 10:41:47
+ * @LastEditTime: 2019-02-15 13:04:27
+ * @About: 
+ -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">主页</a></li>
+    <li class="breadcrumb-item active">收藏</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <h5>{{ request.user.username }} 所收藏的主题</h5>
+    {% if topics %}
+    <table class="table table-striped mb-4">
+        <thead class="thead-inverse">
+            <tr>
+                <th>所属标签</th>
+                <th>标题</th>
+                <th>最后更新时间</th>
+                <th>回复</th>
+                <th>点击</th>
+                <th>移除</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for topic in topics %}
+            <tr>
+                <td>
+                    <a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board }}</a>
+                </td>
+                <td class="align-middle">
+                    <a href="{% url 'topic_posts' topic.board.pk topic.pk  %}">{{ topic.subject }}</a>
+                </td>
+                <td class="align-middle">
+                    {{ topic.last_updated }}
+                </td>
+                <td class="align-middle">
+                    {{ topic.post_count }}
+                </td>
+                <td class="align-middle">
+                    {{ topic.views }}
+                </td>
+                <td class="align-middle">
+                    <!-- <button type="button" class="btn btn-danger"><a href="#">移除</a></button> -->
+                    <a href="{% url 'remove_log' topic.board.pk topic.pk %}" class="">
+                        <img style="width:30px" src="{% static 'img/remove.jpg' %}" alt="">
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h6>查询无收藏记录</h6>
+    {% endif %}
+{% endblock %}

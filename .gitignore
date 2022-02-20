@@ -1,0 +1,8 @@
+.vscode/temp.sql
+.vscode
+db.sqlite3
+*.pyc
+media
+accounts/migrations/*
+boards/migrations/*
+video/migrations/*

@@ -1,0 +1,20 @@
+<!--
+ * @Author: APTX
+ * @Email: NOIR.APTX4869@gmail.com
+ * @Date: 2018-12-24 10:28:21
+ * @LastEditTime: 2019-01-27 00:49:36
+ * @About: 
+ -->
+{% extends 'base.html' %}
+{% load pagination_tags %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">主页</a></li>
+    <li class="breadcrumb-item active">{{ user_log.username }}的主题记录</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<h6>该用户设置了隐私,你无权查看!</h6>
+{% endblock %}

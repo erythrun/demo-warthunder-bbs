@@ -1,0 +1,61 @@
+<!--
+ * @Author: APTX
+ * @Email: NOIR.APTX4869@gmail.com
+ * @Date: 2018-12-24 10:28:21
+ * @LastEditTime: 2019-01-29 10:24:46
+ * @About: 
+ -->
+{% extends 'base.html' %}
+{% load pagination_tags %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">主页</a></li>
+    <li class="breadcrumb-item active">{{ user_log.username }}的主题记录</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+        <a href="#" class="btn btn-secondary" role="button">主题记录</a>
+        <a href="{% url 'user_log_post' user_log.pk %}" class="btn btn-primary" role="button">回复记录</a>
+    </div>
+    {% if topics %}
+    <table class="table table-striped mb-4" style="table-layout: fixed;min-width: 100%;">
+        <thead class="thead-inverse">
+            <tr>
+                <th>所在版块</th>
+                <th>标题</th>
+                <th>发表时间</th>
+                <th>回复</th>
+                <th>点击</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% autopaginate topics 2 %}
+            {% for topic in topics %}
+            <tr>
+                <td style="width:100px;">
+                    <a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board }}</a>
+                </td>
+                <td style="width:300px;"class="align-middle">
+                    <a href="{% url 'topic_posts' topic.board.pk topic.pk  %}">{{ topic.subject }}</a>
+                </td>
+                <td style="" class="align-middle">
+                    {{ topic.last_updated }}
+                </td>
+                <td style="" class="align-middle">
+                    {{ topic.post_count }}
+                </td>
+                <td style="" class="align-middle">
+                    {{ topic.views }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% paginate using "pagination/pagin.html" %}
+    {% else %}
+        <h6>查询无主题记录</h6>
+    {% endif %}
+{% endblock %}

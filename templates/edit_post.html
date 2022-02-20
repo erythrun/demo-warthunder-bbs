@@ -1,0 +1,28 @@
+<!--
+ * @Author: X105E
+ * @Email: NOIR.APTX4869@gmail.com
+ * @Date: 2018-12-14 09:56:04
+ * @LastEditTime: 2019-01-28 11:15:06
+ * @About: 
+ -->
+{% extends 'base.html' %}
+
+{% block title %}编辑{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb my-4">
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Boards</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'board_topics' post.topic.board.pk %}">{{ post.topic.board.name }}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}">{{ post.topic.subject }}</a></li>
+  <li class="breadcrumb-item active">编辑</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="mb-4" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form.html' %}
+    <button type="submit" class="btn btn-success">保存</button>
+    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-secondary" role="button">退出</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,148 @@
+<!--
+ * @Author: APTX
+ * @Email: NOIR.APTX4869@gmail.com
+ * @Date: 2018-12-14 09:56:04
+ * @LastEditTime: 2019-02-15 15:42:38
+ * @About: 
+ -->
+{% extends 'base.html' %}
+
+{% load static %}
+{% load gravatar %}
+{% block title %}{{ topic.subject }}{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb my-4">
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">主页</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board.name }}</a></li>
+  <li class="breadcrumb-item active">{{ topic.subject }}</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+  <button type="button" class="btn btn-info">累计{{topic.views}}次点击,留下了{{ topic.post_count }}个回答</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="{% url 'reply_topic' topic.board.pk topic.pk %}" class="btn btn-primary" role="button">我要回答</a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  {% if collect_status == True %}
+    <a href="{% url 'remove' topic.board.pk topic.pk %}" class="btn btn-secondary">取消收藏</a>
+  {% else %}
+    <a href="{% url 'collect' topic.board.pk topic.pk %}" class="btn btn-primary">收藏</a>
+  {% endif %}
+</div>
+{% for post in posts %}
+<!-- <div class="card mb-2">
+  <div class="card-body p-3">
+    <div class="row">
+      <div class="col-2">
+        {% if post.created_by.avatar %}
+        <img style="width:40px" src="{{ MEDIA_URL }}{{ post.created_by.avatar }}" alt="{{ post.created_by.username }}" class="w-100">
+        {% else %}
+        <img src="{{ post.created_by|gravatar }}" alt="{{ post.created_by.username }}" class="w-100">
+        {% endif %}
+        
+        <small>回复: {{ post.created_by.posts.count }}</small>
+      </div>
+      <div class="col-10">
+        <div class="row mb-3">
+          <div class="col-6">
+              <strong class="badge badge-pill badge-light">
+                <a href="{% url 'user_log' post.created_by.pk %}">
+                  {{ post.created_by.username }}
+                </a>
+              </strong>
+              <small>{{ post.created_by.desc }}</small>
+          </div>
+          <div class="col-6 text-right">
+            <small class="text-muted">{{ post.created_at }}</small>
+          </div>
+        </div>
+        {{ post.get_message_as_markdown }}
+        {% if post.created_by == user %}
+        <div class="mt-3">
+          <a href="{% url 'edit_post' post.topic.board.pk post.topic.pk post.pk %}" 
+            class="btn btn-primary btn-sm" role="button">编辑</a>
+            {% comment %} 这里依次用了三个变量引用,依次是板块pk,主题pk,回复pk {% endcomment %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="card mb-2">
+  <div class="card-body p-3">
+    <div class="media">
+      {% if post.created_by.avatar %}
+        <img style="width:64px" src="{{ MEDIA_URL }}{{ post.created_by.avatar }}" alt="{{ post.created_by.username }}" class="align-self-start mr-3">
+      {% else %}
+        <img style="width:64px" src="{{ post.created_by|gravatar }}" alt="{{ post.created_by.username }}" class="align-self-start mr-3">
+      {% endif %}
+      <div class="media-body">
+        <strong class="badge badge-pill badge-light">
+          <a href="{% url 'user_log' post.created_by.pk %}">
+            {{ post.created_by.username }}
+          </a>
+        </strong>
+        <small class="text-muted">
+          {{ post.created_by.desc }} 
+        </small>
+        <small style="float:right;"> 
+          {{ post.created_at }}
+        </small>
+        <br />
+        <br />
+        {{ post.get_message_as_markdown }}
+        {% if post.created_by == user %}
+        <div class="mt-3">
+          <a href="{% url 'edit_post' post.topic.board.pk post.topic.pk post.pk %}" class="btn btn-primary btn-sm" role="button">编辑</a>
+          {% comment %} 这里依次用了三个变量引用,依次是板块pk,主题pk,回复pk {% endcomment %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% if posts.has_other_pages %}
+  <nav aria-label="Topics pagination" class="mb-4">
+    <ul class="pagination">
+      {% if posts.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.previous_page_number }}">上一页</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">上一页</span>
+      </li>
+      {% endif %}
+
+      {% for page_num in posts.paginator.page_range %}
+        {% if posts.number == page_num %}
+          <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+          </li>
+        {% else %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.next_page_number }}">下一页</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">下一页</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+{% endblock %}
